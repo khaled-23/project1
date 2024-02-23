@@ -1,42 +1,30 @@
-import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         gameStart();
-
-
-
-
-
-
-
-
     }
 
 
     public static void gameStart(){
         Scanner s = new Scanner(System.in);
         Scanner s2 = new Scanner(System.in);
-        Scanner s3 = new Scanner(System.in);
 
         int gameMode = 0;
 
-        while(gameMode != 1 || gameMode != 2) {
+        while(gameMode != 1 && gameMode != 2) {
             try {
                 System.out.println("enter 1 to play singlePlayer." +
                         "\nenter 2 to play multiplayer.");
                 gameMode = Integer.parseInt(s.next());
-                if(gameMode == 1 || gameMode == 2)
-                    break;
-            } catch (NumberFormatException e) {
+
+            } catch(NumberFormatException e){
+            }
+            if(gameMode !=1 && gameMode != 2) {
                 System.out.println("please enter either 1 or 2");
                 System.out.println("----------------------------");
-                continue;
             }
-            System.out.println("please enter either 1 or 2");
-            System.out.println("----------------------------");
 
         }
 
@@ -50,7 +38,7 @@ public class Main {
                                   {'7','8','9'}}; //position in the grid
 
                 //default settings
-                boolean isPlayerTurn = true;
+                boolean isPlayerTurn = false;
                 char playerRole = 'x';
                 char computerRole = 'o';
                 int positionInput=0;
@@ -67,7 +55,7 @@ public class Main {
 
                 //if player choose o, assign o to player and x to computer.
                 if (choice.equalsIgnoreCase("o")){
-                    isPlayerTurn = false;
+                    isPlayerTurn = true;
                     playerRole = 'o';
                     computerRole = 'x';
                 }
@@ -76,34 +64,40 @@ public class Main {
                 do{
 
 
-                    //game Board
-                    System.out.println("|-----|-----|-----|");
-                    System.out.println("|  " + match[0][0] + "  |  " + match[0][1] + "  |  " + match[0][2] + "  |");
-                    System.out.println("|-----|-----|-----|");
-                    System.out.println("|  " + match[1][0] + "  |  " + match[1][1] + "  |  " + match[1][2] + "  |");
-                    System.out.println("|-----|-----|-----|");
-                    System.out.println("|  " + match[2][0] + "  |  " + match[2][1] + "  |  " + match[2][2] + "  |");
-                    System.out.println("|-----|-----|-----|");
+                    winCondtion = winCondition(match, playerRole, computerRole, isPlayerTurn);//check if the match win or draw
+                    isPlayerTurn = !isPlayerTurn;
 
 
+
+
+                    int playerInput=5;
                     do{
-                        System.out.println("computer choose: " + positionInput);
+
                         if(isPlayerTurn){
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[0][0] + "  |  " + match[0][1] + "  |  " + match[0][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[1][0] + "  |  " + match[1][1] + "  |  " + match[1][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[2][0] + "  |  " + match[2][1] + "  |  " + match[2][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+
+                            if(positionInput!=0 && !(playerInput>9 || playerInput<1))
+                                System.out.println("computer choose: " + positionInput);
                             System.out.println("enter an available position");
-                            positionInput = Integer.parseInt(String.valueOf(s.nextInt()));
+                            try{
+                                positionInput = Integer.parseInt(String.valueOf(s.next()));
+                            }catch(NumberFormatException e){
+                            }
                         }else{
                             positionInput = computerTurn(match);
                         }
                         isAvailable = isAvailable(match, positionInput);
+                        playerInput = positionInput;
 
-                    }while(!isAvailable);
+                    }while(!isAvailable || playerInput>9 || playerInput<1);
 
 
-//                    isAvailable = isAvailable(match, positionInput);
-//
-//
-//
-//                    winCondtion = winCondtion(match);
 
 
                     switch(positionInput){
@@ -161,11 +155,9 @@ public class Main {
                             }else match[2][2] = computerRole;
                             break;
                     }
-
-                    winCondtion = winCondtion(match);//check if the match win or draw
-                    isPlayerTurn = !isPlayerTurn;
-
-                }while(!winCondtion);
+                    count++;
+                }while(count<9);
+                gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondtion);
 
                 break;
             case 2:
@@ -225,35 +217,64 @@ public class Main {
 
         }
 
-
-
         return isAvailable;
     }
 
-    public static boolean winCondtion(char[][] match){
+    public static boolean winCondition(char[][] match, char playerRole, char computerRole , boolean isPlayerTurn){
 
-        boolean firstLineH = (match[0][0] == 'x' && match[0][1] == 'x' && match[0][2] == 'x')
-                || (match[0][0] == 'o' && match[0][1] == 'o' && match[0][2] == 'o');
-        boolean secondLineH = (match[1][0] == 'x' && match[1][1] == 'x' && match[1][2] == 'x')
-                || (match[1][0] == 'o' && match[1][1] == 'o' && match[1][2] == 'o');
-        boolean thirdLineH = (match[2][0] == 'x' && match[2][1] == 'x' && match[2][2] == 'x')
-                || (match[2][0] == 'o' && match[2][1] == 'o' && match[2][2] == 'o');
+        boolean firstRow = match[0][0] ==  match[0][1] && match[0][2] == match[0][0];
+        boolean secondRow = match[1][0] == match[1][1] && match[1][2] == match[1][0];
+        boolean thirdRow = match[2][0] == match[2][1] && match[2][2] == match[2][0];
+        boolean firstColumn = match[0][0] == match[1][0] && match[2][0] == match[0][0];
+        boolean secondColum = match[0][1] == match[1][1] && match[2][1] == match[0][1];
+        boolean thirdColum = match[0][2] == match[1][2] && match[2][2] == match[0][2];
+        boolean diagonalRL = match[0][2] == match[1][1] && match[2][0] == match[0][2];
+        boolean diagonalLR = match[0][0] == match [1][1] && match[2][2] == match[0][0];
+
         boolean winCondition = false;
-
-        if(firstLineH){
-            System.out.println("win");
+        if(firstRow && isPlayerTurn){
             winCondition = true;
-        }else if(secondLineH){
-            System.out.println("win");
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(firstRow){
             winCondition = true;
-        } else if(thirdLineH) {
-            System.out.println("win");
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        } else if(secondRow && isPlayerTurn) {
             winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(secondRow){
+        } else if(firstColumn && isPlayerTurn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(firstColumn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        } else if(secondColum && isPlayerTurn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(secondColum) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        } else if(thirdColum && isPlayerTurn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(thirdColum) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        } else if(diagonalLR && isPlayerTurn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(diagonalLR) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        } else if(diagonalRL && isPlayerTurn) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
+        }else if(diagonalRL) {
+            winCondition = true;
+            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
         }
-
         return winCondition;
     }
-
     public static int computerTurn(char[][] match){
 
         boolean isAvailable = false;
@@ -266,11 +287,35 @@ public class Main {
 
         }while(!isAvailable);
 
-
         return computerInput;
     }
+    public static void gameEnd(char[][] match,char playerRole,char computerRole,boolean isPlayerTurn, boolean winCondtion){
+        Scanner s = new Scanner(System.in);
 
-    public static void gameEnd(){
+        System.out.println("|-----|-----|-----|");
+        System.out.println("|  " + match[0][0] + "  |  " + match[0][1] + "  |  " + match[0][2] + "  |");
+        System.out.println("|-----|-----|-----|");
+        System.out.println("|  " + match[1][0] + "  |  " + match[1][1] + "  |  " + match[1][2] + "  |");
+        System.out.println("|-----|-----|-----|");
+        System.out.println("|  " + match[2][0] + "  |  " + match[2][1] + "  |  " + match[2][2] + "  |");
+        System.out.println("|-----|-----|-----|");
+        if(isPlayerTurn && winCondtion) {
+            System.out.println("player won: " + playerRole);
+        }else if(!isPlayerTurn && winCondtion){
+            System.out.println("computer won:" + computerRole);
+        }else System.out.println("game ended in a draw");
 
+
+        String answer;
+        do{
+            System.out.println("end");
+            System.out.println("continue ? (yes/no)");
+             answer = s.nextLine();
+        }while(!answer.equalsIgnoreCase("yes") && !answer.equalsIgnoreCase("no"));
+
+        if(answer.equalsIgnoreCase("yes")){
+            System.out.println("-----------------------------------");
+            gameStart();
+        }else System.exit(0);
     }
 }
