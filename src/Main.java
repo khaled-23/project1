@@ -15,6 +15,7 @@ public class Main {
 
         //loops player until they choose one of the available game mode
         while(gameMode != 1 && gameMode != 2 && gameMode != 3 && gameMode != 4) {
+
             try {
                 System.out.println("enter 1 to play single player." +
                         "\nenter 2 to play multiplayer." +
@@ -24,6 +25,7 @@ public class Main {
 
             } catch(NumberFormatException e){
             }
+
             if(gameMode !=1 && gameMode != 2 && gameMode!= 3 && gameMode != 4) {
                 System.out.println("please enter a valid option");
                 System.out.println("----------------------------");
@@ -74,6 +76,7 @@ public class Main {
 
 
                     //loops player until they give valid position
+
                     int playerInput=5;
                     do{
 
@@ -161,6 +164,7 @@ public class Main {
                     }
                     count++;
                 }while(count<9);
+
                 gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition, gameMode);
 
                 break;
@@ -436,6 +440,7 @@ public class Main {
                 }
 
 
+
                 break;
             case 4:
                 System.exit(0);
@@ -493,10 +498,12 @@ public class Main {
         return isAvailable;
     }
 
+
     public static boolean winCondition(char[][] match, char playerRole,
                                        char computerRole , boolean isPlayerTurn, int gameMode){
 
         //game logic
+
         boolean firstRow = match[0][0] ==  match[0][1] && match[0][2] == match[0][0];
         boolean secondRow = match[1][0] == match[1][1] && match[1][2] == match[1][0];
         boolean thirdRow = match[2][0] == match[2][1] && match[2][2] == match[2][0];
@@ -507,6 +514,7 @@ public class Main {
         boolean diagonalLR = match[0][0] == match [1][1] && match[2][2] == match[0][0];
 
         boolean winCondition = false;
+
         //since game mode 1 and 2 ends in 1 round,
         //they will invoke gameEnd() as soon as winCondition is true.
         if(gameMode == 1 || gameMode == 2){
@@ -553,8 +561,8 @@ public class Main {
                 winCondition = true;
             }else if(diagonalRL){
                 winCondition = true;}
-        }
 
+        }
         return winCondition;
     }
     public static int computerTurn(char[][] match){
@@ -573,6 +581,7 @@ public class Main {
 
         return computerInput;
     }
+
     public static void gameEnd(char[][] match,char playerRole,char computerRole,boolean isPlayerTurn,
                                boolean winCondition, int gameMode){
         Scanner s = new Scanner(System.in);
@@ -614,6 +623,7 @@ public class Main {
         do{
             System.out.println("end");
             System.out.println("play again ? (yes/no)");
+
              answer = s.nextLine();
         }while(!answer.equalsIgnoreCase("yes") && !answer.equalsIgnoreCase("no"));
 
