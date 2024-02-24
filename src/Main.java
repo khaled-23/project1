@@ -32,7 +32,6 @@ public class Main {
 
         switch(gameMode){
             case 1:
-
                 char[][] match = {{'1','2','3'},
                                   {'4','5','6'},
                                   {'7','8','9'}}; //position in the grid
@@ -161,7 +160,116 @@ public class Main {
 
                 break;
             case 2:
+
                 System.out.println("here multi");
+                match = new char[][]{{'1', '2', '3'},//position in the grid
+                                     {'4', '5', '6'},
+                                     {'7', '8', '9'}};
+                boolean isPlayer1Turn = false;
+                char player1Role = 'x';
+                char player2Role = 'o';
+                positionInput=0;
+                winCondtion = false;
+                isAvailable = false;
+                count = 0;
+
+
+                do{
+                    winCondtion = winCondition(match, player1Role, player2Role, isPlayer1Turn);//check if the match win or draw
+                    isPlayer1Turn = !isPlayer1Turn;
+
+
+                    int playerInput=5;
+                    do{
+
+
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[0][0] + "  |  " + match[0][1] + "  |  " + match[0][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[1][0] + "  |  " + match[1][1] + "  |  " + match[1][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+                            System.out.println("|  " + match[2][0] + "  |  " + match[2][1] + "  |  " + match[2][2] + "  |");
+                            System.out.println("|-----|-----|-----|");
+                            if(isPlayer1Turn){
+                                System.out.println("enter an available position: player1");
+                            }else System.out.println("enter an available position: player2");
+                            try{
+                                positionInput = Integer.parseInt(String.valueOf(s.next()));
+                            }catch(NumberFormatException e){
+                            }
+
+                        isAvailable = isAvailable(match, positionInput);
+                        playerInput = positionInput;
+
+                    }while(!isAvailable || playerInput>9 || playerInput<1);
+
+
+                    switch(positionInput){
+                        case 1:
+                            if(isPlayer1Turn) {
+                                match[0][0] = player1Role;
+                            }else match[0][0] = player2Role;
+                            break;
+
+                        case 2:
+                            if(isPlayer1Turn) {
+                                match[0][1] = player1Role;
+                            }else match[0][1] = player2Role;
+
+                            break;
+                        case 3:
+                            if(isPlayer1Turn) {
+                                match[0][2] = player1Role;
+                            }else match[0][2] = player2Role;
+
+                            break;
+                        case 4:
+                            if(isPlayer1Turn) {
+                                match[1][0] = player1Role;
+                            }else match[1][0] = player2Role;
+
+                            break;
+                        case 5:
+                            if(isPlayer1Turn) {
+                                match[1][1] = player1Role;
+                            }else match[1][1] = player2Role;
+
+                            break;
+                        case 6:
+                            if(isPlayer1Turn) {
+                                match[1][2] = player1Role;
+                            }else match[1][2] = player2Role;
+
+                            break;
+                        case 7:
+                            if(isPlayer1Turn) {
+                                match[2][0] = player1Role;
+                            }else match[2][0] = player2Role;
+
+                            break;
+                        case 8:
+                            if(isPlayer1Turn) {
+                                match[2][1] = player1Role;
+                            }else match[2][1] = player2Role;
+
+                            break;
+                        case 9:
+                            if(isPlayer1Turn) {
+                                match[2][2] = player1Role;
+                            }else match[2][2] = player2Role;
+                            break;
+                    }
+
+
+
+                    count++;
+                }while(count<9);
+
+                gameEnd(match, player1Role, player2Role, isPlayer1Turn, winCondtion);
+
+
+
+
 
                 break;
             default:
@@ -232,44 +340,28 @@ public class Main {
         boolean diagonalLR = match[0][0] == match [1][1] && match[2][2] == match[0][0];
 
         boolean winCondition = false;
-        if(firstRow && isPlayerTurn){
-            winCondition = true;
-            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(firstRow){
-            winCondition = true;
-            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        } else if(secondRow && isPlayerTurn) {
+        if(firstRow){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
         }else if(secondRow){
-        } else if(firstColumn && isPlayerTurn) {
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(firstColumn) {
+        }else if(thirdRow){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        } else if(secondColum && isPlayerTurn) {
+        }else if(firstColumn){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(secondColum) {
+        } else if(secondColum) {
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        } else if(thirdColum && isPlayerTurn) {
+        }else if(thirdColum){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(thirdColum) {
+        }else if(diagonalLR){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        } else if(diagonalLR && isPlayerTurn) {
-            winCondition = true;
-            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(diagonalLR) {
-            winCondition = true;
-            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        } else if(diagonalRL && isPlayerTurn) {
-            winCondition = true;
-            gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
-        }else if(diagonalRL) {
+        }else if(diagonalRL){
             winCondition = true;
             gameEnd(match, playerRole, computerRole, isPlayerTurn, winCondition);
         }
@@ -291,6 +383,8 @@ public class Main {
     }
     public static void gameEnd(char[][] match,char playerRole,char computerRole,boolean isPlayerTurn, boolean winCondtion){
         Scanner s = new Scanner(System.in);
+
+        //if gameMode==1 etc
 
         System.out.println("|-----|-----|-----|");
         System.out.println("|  " + match[0][0] + "  |  " + match[0][1] + "  |  " + match[0][2] + "  |");
